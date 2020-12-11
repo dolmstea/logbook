@@ -1,3 +1,28 @@
+.appBarTitle {
+  flex-grow: 1
+}
+
+.notUnderlined {
+  text-decoration: none
+}
+
+.notALink {
+  color: #fff
+}
+
+.notALink:hover {
+  color: #fff
+}
+
+.notALinkBlack {
+  color: #000000de
+}
+
+.notALinkBlack:hover {
+  color: #000000de
+}
+
+/*
 .App {
   text-align: center;
 }
@@ -37,3 +62,4 @@
     transform: translateY(0px)
   }
 }
+*/
