@@ -46,8 +46,8 @@ class NewUser extends React.Component {
                     this.state.email,
                     this.state.pass
                 )
-                .then((user) =>
-                    user.updateProfile({
+                .then((credential) =>
+                    credential.user.updateProfile({
                         displayName: this.state.name,
                     })
                 )
@@ -115,7 +115,9 @@ class NewUser extends React.Component {
                                 <Button
                                     color='red'
                                     type='reset'
-                                    onClick={this.handleCancel}
+                                    onClick={() => {
+                                        this.props.history.goBack();
+                                    }}
                                 >
                                     Cancel
                                 </Button>

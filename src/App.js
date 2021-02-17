@@ -7,39 +7,30 @@ import { logIn, logOut } from './app/store.js';
 
 import './App.css';
 
-import LogList from './views/LogList.js';
-import NewEntry from './views/NewEntry.js';
-import Auth from './views/Auth.js';
-import NewUser from './views/NewUser.js';
-import PassReset from './views/PassReset.js';
-import Profile from './views/Profile.js';
-import PDFService from './services/PDFService.js';
-
 // PDF library options: pdfmake, jsPDF, PDFkit.
 
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 
-import {
-    Container,
-    AppBar,
-    Toolbar,
-    Grid,
-    Card,
-    CardHeader,
-    CardContent,
-    Typography,
-    Paper,
-    Button,
-    Box,
-    CssBaseline,
-    IconButton,
-    Menu,
-    MenuItem,
-} from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Box, IconButton, Menu, MenuItem } from '@material-ui/core';
 
 import { AccountCircle, Add } from '@material-ui/icons';
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+import LogList from './views/LogList.js';
+import NewEntry from './views/NewEntry.js';
+import EditEntry from './views/EditEntry.js';
+import Auth from './views/Auth.js';
+import NewUser from './views/NewUser.js';
+import PassReset from './views/PassReset.js';
+import Profile from './views/Profile.js';
+import EditProfile from './views/EditProfile.js';
+import Loading from './views/Loading.js';
+import Report from './views/Report.js';
+import PDFService from './services/PDFService.js';
+
+//const LogList = React.lazy(() => import('./views/LogList.js'));
+//const NewEntry = React.lazy(() => import('./views/NewEntry.js'));
 
 const theme = createMuiTheme({
     palette: {
@@ -57,6 +48,7 @@ class App extends React.Component {
         super(props);
         this.state = {
             menuAnchor: null,
+            isLoading: true,
         };
 
         this.signOut = this.signOut.bind(this);
@@ -70,6 +62,9 @@ class App extends React.Component {
             } else {
                 this.props.logOut();
             }
+            this.setState({
+                isLoading: false,
+            });
         });
     }
 
@@ -99,109 +94,121 @@ class App extends React.Component {
         return (
             <ThemeProvider theme={theme}>
                 <Router>
-                    <AppBar position='static'>
-                        <Toolbar variant='dense' className='toolbar'>
-                            <Link to='/' className='notUnderlined notALink appBarTitle'>
-                                <Box display='flex' flexDirection='row'>
-                                    <Typography variant='h6'>Logbook</Typography>
-                                    <Typography variant='subtitle2'>&beta;</Typography>
-                                </Box>
-                            </Link>
-                            {/*
-                        <Button variant='outlined' onClick={this.genPdf}>
-                            Generate PDF
-                        </Button>
-                        <Link to='/new' className='notUnderlined'>
-                            <Button variant='outlined'>New Entry</Button>
-                        </Link>
-                        <Box ml={2}>
-                            <Link to='/' className='notUnderlined'>
-                                <Button variant='outlined' onClick={this.signOut}>
-                                    Sign Out
-                                </Button>
-                            </Link>
-                        </Box>
-                        */}
-                            {this.props.uid && (
-                                <React.Fragment>
-                                    <Link to='/new' className='notALink'>
-                                        <IconButton color='inherit'>
-                                            <Add />
-                                        </IconButton>
+                    <Switch>
+                        {this.props.uid && (
+                            <Route path='/report'>
+                                <Report />
+                            </Route>
+                        )}
+                        <Route path='/'>
+                            <AppBar position='static'>
+                                <Toolbar variant='dense' className='toolbar'>
+                                    <Link to='/' className='notUnderlined notALink appBarTitle'>
+                                        <Box display='flex' flexDirection='row'>
+                                            <Typography variant='h6'>\\ Logbook</Typography>
+                                            <Typography variant='subtitle2'>&beta;</Typography>
+                                        </Box>
                                     </Link>
-                                    <IconButton onClick={this.openMenu} color='inherit'>
-                                        <AccountCircle />
-                                    </IconButton>
-                                    <Menu
-                                        anchorEl={this.state.menuAnchor}
-                                        keepMounted
-                                        open={Boolean(this.state.menuAnchor)}
-                                        onClose={this.closeMenu}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
-                                    >
-                                        <Link to='/profile' className='notALinkBlack'>
-                                            <MenuItem onClick={this.closeMenu}>Profile</MenuItem>
-                                        </Link>
-                                        <MenuItem
-                                            onClick={() => {
-                                                this.closeMenu();
-                                                this.genPdf();
-                                            }}
-                                        >
-                                            Generate PDF Report
-                                        </MenuItem>
-                                        <Link to='/' className='notALinkBlack'>
-                                            <MenuItem
-                                                onClick={() => {
-                                                    this.closeMenu();
-                                                    this.signOut();
+                                    {this.props.uid && (
+                                        <React.Fragment>
+                                            <Link to='/new' className='notALink'>
+                                                <IconButton color='inherit'>
+                                                    <Add />
+                                                </IconButton>
+                                            </Link>
+                                            <IconButton onClick={this.openMenu} color='inherit'>
+                                                <AccountCircle />
+                                            </IconButton>
+                                            <Menu
+                                                anchorEl={this.state.menuAnchor}
+                                                keepMounted
+                                                open={Boolean(this.state.menuAnchor)}
+                                                onClose={this.closeMenu}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
                                                 }}
                                             >
-                                                Sign Out
-                                            </MenuItem>
-                                        </Link>
-                                    </Menu>
-                                </React.Fragment>
+                                                <Link to='/profile' className='notALinkBlack'>
+                                                    <MenuItem onClick={this.closeMenu}>Profile</MenuItem>
+                                                </Link>
+                                                <Link to='/report' target='_blank' className='notALinkBlack'>
+                                                    <MenuItem>Generate PDF Report</MenuItem>
+                                                </Link>
+                                                <Link to='/' className='notALinkBlack'>
+                                                    <MenuItem
+                                                        onClick={() => {
+                                                            this.closeMenu();
+                                                            this.signOut();
+                                                        }}
+                                                    >
+                                                        Sign Out
+                                                    </MenuItem>
+                                                </Link>
+                                            </Menu>
+                                        </React.Fragment>
+                                    )}
+                                </Toolbar>
+                            </AppBar>
+                            {this.state.isLoading ? (
+                                <Loading />
+                            ) : (
+                                <Switch>
+                                    <Route path='/loading'>
+                                        {' '}
+                                        {/* This is just for testing. */}
+                                        <Loading />
+                                    </Route>
+                                    <Route path='/addUser'>
+                                        <NewUser />
+                                    </Route>
+                                    <Route path='/resetPass'>
+                                        <PassReset />
+                                    </Route>
+                                    {this.props.uid && (
+                                        <Route path='/list'>
+                                            <LogList />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/new'>
+                                            <NewEntry />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/edit'>
+                                            <EditEntry />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/profile'>
+                                            <Profile />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/editProfile'>
+                                            <EditProfile />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/report'>
+                                            <Report />
+                                        </Route>
+                                    )}
+                                    <Route path='/'>{this.props.uid ? <Redirect to='/list' /> : <Auth />}</Route>
+                                </Switch>
                             )}
-                        </Toolbar>
-                    </AppBar>
-                    <Switch>
-                        <Route path='/addUser'>
-                            <NewUser />
+                            <Box mt={4}>
+                                <Typography variant='body2' align='center'>
+                                    &copy; 2020 David Olmstead
+                                </Typography>
+                            </Box>
                         </Route>
-                        <Route path='/resetPass'>
-                            <PassReset />
-                        </Route>
-                        {/* TODO: If not logged in, always redirect to /.*/}
-                        {this.props.uid && (
-                            <Route path='/list'>
-                                <LogList />
-                            </Route>
-                        )}
-                        {this.props.uid && (
-                            <Route path='/new'>
-                                <NewEntry />
-                            </Route>
-                        )}
-                        {this.props.uid && (
-                            <Route path='/profile'>
-                                <Profile />
-                            </Route>
-                        )}
-                        <Route path='/'>{this.props.uid ? <Redirect to='/list' /> : <Auth />}</Route>
                     </Switch>
-                    <Box mt={4}>
-                        <Typography variant='body2' align='center'>
-                            &copy; 2020 David Olmstead
-                        </Typography>
-                    </Box>
                 </Router>
             </ThemeProvider>
         );
