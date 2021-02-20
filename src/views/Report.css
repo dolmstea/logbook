@@ -2,6 +2,14 @@
     height: 100%
 }
 
-.pagebreak {
-    page-break-after: always
+.tablecontainer {
+    page-break-inside: avoid
+}
+
+.table {
+    table-layout: fixed;
+}
+
+.tablecell {
+    font-size: 0.5rem
 }

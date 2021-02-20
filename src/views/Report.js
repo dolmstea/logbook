@@ -44,6 +44,12 @@ const data = [
 
 const colours = ['#9c27b0', '#2196f3', '#4caf50', '#ff9800', '#f44336', '#795548'];
 
+const styles = {
+    table: {
+        fontSize: '0.7rem'
+    }
+}
+
 class Report extends React.Component {
     constructor(props) {
         super(props);
@@ -247,21 +253,22 @@ class Report extends React.Component {
                             </CardContent>
                         </Card>
                     </Grid>
+                    </Grid>
                     {Object.keys(this.state.logsByDate).map((date) => (
-                        <Grid item xs={12} className='pagebreak'>
-                            <TableContainer component={Card} variant='outlined'>
-                                <Table size='small'>
+                        
+                            <TableContainer component={Card} variant='outlined' className='tablecontainer'>
+                                <Table size='small' className='table'>
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>{date}</TableCell>
-                                            <TableCell>Age</TableCell>
-                                            <TableCell>ASA</TableCell>
-                                            <TableCell>Location</TableCell>
-                                            <TableCell>Staff</TableCell>
-                                            <TableCell>Service</TableCell>
-                                            <TableCell>Anesthetic Type</TableCell>
-                                            <TableCell>Procedures</TableCell>
-                                            <TableCell>EPAs</TableCell>
+                                            <TableCell style={{width: '70px'}}>Age</TableCell>
+                                            <TableCell style={{width: '50px'}}>ASA</TableCell>
+                                            <TableCell style={{width: '70px'}}>Location</TableCell>
+                                            <TableCell style={{width: '70px'}}>Staff</TableCell>
+                                            <TableCell style={{width: '70px'}}>Service</TableCell>
+                                            <TableCell style={{width: '70px'}}>Anesthetic Type</TableCell>
+                                            <TableCell style={{width: '70px'}}>Procedures</TableCell>
+                                            <TableCell style={{width: '70px'}}>EPAs</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -290,9 +297,9 @@ class Report extends React.Component {
                                     </TableBody>
                                 </Table>
                             </TableContainer>
-                        </Grid>
+                        
                     ))}
-                </Grid>
+                
             </Container>
         );
     }

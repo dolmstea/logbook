@@ -1503,6 +1503,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.4.3, @babel/runtime@npm:^7.6.2":
+  version: 7.12.13
+  resolution: "@babel/runtime@npm:7.12.13"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: 52e8ac97f5686fc0718592542b5aab4b231e52b89f432d81c5d7a03d43891b187c7cc3cf2ccc7b99a967c9d7c33afe3815dc04db6185017cb3933b6c8b1f535a
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.10.4, @babel/template@npm:^7.12.7, @babel/template@npm:^7.3.3":
   version: 7.12.7
   resolution: "@babel/template@npm:7.12.7"
@@ -2578,6 +2587,87 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-pdf/fontkit@npm:^1.11.0, @react-pdf/fontkit@npm:^1.13.0":
+  version: 1.13.0
+  resolution: "@react-pdf/fontkit@npm:1.13.0"
+  dependencies:
+    "@react-pdf/unicode-properties": ^2.2.0
+    brotli: ^1.2.0
+    clone: ^1.0.1
+    deep-equal: ^1.0.0
+    dfa: ^1.0.0
+    restructure: ^0.5.3
+    tiny-inflate: ^1.0.2
+    unicode-trie: ^0.3.0
+  checksum: 58451b87b5d48627fde20727533786b046449affc11fb973f3926da41b9ef0901c596a099e1ef4a630f7d0625f8ec1126e413972b0624fffc370b21f6145e686
+  languageName: node
+  linkType: hard
+
+"@react-pdf/pdfkit@npm:^1.4.2":
+  version: 1.5.0
+  resolution: "@react-pdf/pdfkit@npm:1.5.0"
+  dependencies:
+    "@react-pdf/fontkit": ^1.11.0
+    "@react-pdf/png-js": ^1.0.0
+    lz-string: ^1.4.4
+  checksum: 88b3efa4406f83bd2688840f50e538c226b8aaab743bbaeee3ce8353b761736e135e18c80374f24dfff6b9aeef113aeaf3941e6dd05bf576be9f2212f93ed250
+  languageName: node
+  linkType: hard
+
+"@react-pdf/png-js@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@react-pdf/png-js@npm:1.0.0"
+  checksum: d472abe6088965b50da31e246eaf427ea3d1fa99a9cc40c919f7a2a2512a2eee0354adbd0d65e1370eace6915dfe3f61cd61c92f8caed668984da3407943aa86
+  languageName: node
+  linkType: hard
+
+"@react-pdf/renderer@npm:^1.6.13":
+  version: 1.6.13
+  resolution: "@react-pdf/renderer@npm:1.6.13"
+  dependencies:
+    "@babel/runtime": ^7.6.2
+    "@react-pdf/fontkit": ^1.13.0
+    "@react-pdf/pdfkit": ^1.4.2
+    "@react-pdf/png-js": ^1.0.0
+    "@react-pdf/textkit": ^0.3.7
+    blob-stream: ^0.1.3
+    cross-fetch: ^3.0.4
+    emoji-regex: ^8.0.0
+    is-url: ^1.2.4
+    media-engine: ^1.0.3
+    page-wrapping: ^1.1.0
+    ramda: ^0.26.1
+    react-reconciler: ^0.24.0
+    scheduler: ^0.18.0
+    yoga-layout-prebuilt: ^1.9.3
+  peerDependencies:
+    react: ^16.0.0
+  checksum: b85d60f07d321ace483b88102ccb836ee0935e5486fd1f904c30438942acabed71dc4e9a7bece3711a287301882847e4c7d137d44641f5843cf3cbaaabd17a12
+  languageName: node
+  linkType: hard
+
+"@react-pdf/textkit@npm:^0.3.7":
+  version: 0.3.7
+  resolution: "@react-pdf/textkit@npm:0.3.7"
+  dependencies:
+    "@babel/runtime": ^7.4.3
+    "@react-pdf/unicode-properties": ^2.2.0
+    babel-runtime: ^6.26.0
+    hyphen: ^1.1.1
+    ramda: ^0.26.1
+  checksum: 77b2e0ee82dc3af0b9aa108e1bf9df506b794ef04384ace41f7773719a5e9c23a6377c28742ac37ce775e158123452360be896268ecbaa37abdfc643f36c9d4d
+  languageName: node
+  linkType: hard
+
+"@react-pdf/unicode-properties@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@react-pdf/unicode-properties@npm:2.2.0"
+  dependencies:
+    unicode-trie: ^0.3.0
+  checksum: 1f18e7e475dd70d7af998b4bc6599f9e5450d5f553904b3bcfdfc648e43f560a62e3015b4d9f2a2b9a8d377fa6bcccb1a624e3ac82b259e020040b5f7ce475ca
+  languageName: node
+  linkType: hard
+
 "@reduxjs/toolkit@npm:^1.1.0":
   version: 1.4.0
   resolution: "@reduxjs/toolkit@npm:1.4.0"
@@ -3256,6 +3346,13 @@ __metadata:
   dependencies:
     "@types/yargs-parser": "*"
   checksum: 151fc79f8146511722b3739ed0c7e83190da4c5fbd8bd0dbcbfedcf89349e7c40908c93656986e67c276a010e6749c59d5f317558bd47fed4ee51da2780a0284
+  languageName: node
+  linkType: hard
+
+"@types/yoga-layout@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@types/yoga-layout@npm:1.9.2"
+  checksum: a701328c5e3614847a92778b6b5e63e9d3fb8494f8aa807b21ef9359aff1b9b443c540e96fe7119008fc3572990afb8855d44864ddc250bc21a2aa1bd497f53c
   languageName: node
   linkType: hard
 
@@ -4522,6 +4619,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"blob-stream@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "blob-stream@npm:0.1.3"
+  dependencies:
+    blob: 0.0.4
+  checksum: d4f9792aa08d629b92f0414fd5cb2e73be6f75b8046c4e3ea5f42ca8a520b474f5e935ed557f1bafbae2d93196fce3bdb51ac5ffdd441767d29e2554e96d345f
+  languageName: node
+  linkType: hard
+
+"blob@npm:0.0.4":
+  version: 0.0.4
+  resolution: "blob@npm:0.0.4"
+  checksum: 3828420906340827bda3473bd83b223f9c80b353b433c7099b3b5ae16e765990cbad4cf65deff7021a84fcec1942b3b477484ac58bdbe3009e13499d09719717
+  languageName: node
+  linkType: hard
+
 "bluebird@npm:^3.5.5":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
@@ -5256,7 +5369,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clone@npm:^1.0.4":
+"clone@npm:^1.0.1, clone@npm:^1.0.4":
   version: 1.0.4
   resolution: "clone@npm:1.0.4"
   checksum: aaaa58f9906002d9c07630682536cb00581ee02d7a76cfa8573ad59784add4d5d6d4afe894c21899b974044f153f8c5c6419ffc8b1cdde61bf104ad52e3a185d
@@ -5693,6 +5806,15 @@ __metadata:
     safe-buffer: ^5.0.1
     sha.js: ^2.4.8
   checksum: 98957676a93081678a2a915ae14898d65aac9b5651ffa55b8888484dd9d79c06d3cb3f85b137cd833ab536d87adee17394bb2b0efc591ea0e34110266d5bcd75
+  languageName: node
+  linkType: hard
+
+"cross-fetch@npm:^3.0.4":
+  version: 3.0.6
+  resolution: "cross-fetch@npm:3.0.6"
+  dependencies:
+    node-fetch: 2.6.1
+  checksum: a491ad1b89988a351f8b8b252b68a5e653636d911042648c43a806cf7575ff043379a80d6269102ca60ec633af0b49ca4c83536007793bb0e65e491769f70d9d
   languageName: node
   linkType: hard
 
@@ -6426,7 +6548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dfa@npm:^1.2.0":
+"dfa@npm:^1.0.0, dfa@npm:^1.2.0":
   version: 1.2.0
   resolution: "dfa@npm:1.2.0"
   checksum: 93bc4b164cce013c429fb3be22f7b0e404aea4898e96777f958909496de768ced0bec8f65c7f06021995cf92815d184b0669f177f12bab1031e7174c8f1c1483
@@ -8885,6 +9007,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"hyphen@npm:^1.1.1":
+  version: 1.6.2
+  resolution: "hyphen@npm:1.6.2"
+  checksum: 928cd269d111322104ba7c6163a5c4660d7187d35fb9dda5f800aa9938d8962b5c065e319722be0809660c9605916743ef8a7ddd1991d4c2fd39c152fdb9dff3
+  languageName: node
+  linkType: hard
+
 "hyphenate-style-name@npm:^1.0.3":
   version: 1.0.4
   resolution: "hyphenate-style-name@npm:1.0.4"
@@ -9597,6 +9726,13 @@ fsevents@~2.1.2:
   version: 1.0.0
   resolution: "is-typedarray@npm:1.0.0"
   checksum: 4e21156e7360a5916eded35c5938adf6278299a8055640864eebb251e4351cd605beccddf9af27477e19f753d453412fe0c21379bb54b55cfdf5add263076959
+  languageName: node
+  linkType: hard
+
+"is-url@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "is-url@npm:1.2.4"
+  checksum: 76d309e9fafdb3117c110ae2911e23f0fb6bf595f5d2c3470def80480e86903e95d84dbdf050f1f9cc746a47e7ea3b24c7096758c724224c5b67211783852e53
   languageName: node
   linkType: hard
 
@@ -10888,6 +11024,7 @@ fsevents@~2.1.2:
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.56
     "@material-ui/pickers": ^3.2.10
+    "@react-pdf/renderer": ^1.6.13
     "@reduxjs/toolkit": ^1.1.0
     "@testing-library/jest-dom": ^4.2.4
     "@testing-library/react": ^9.3.2
@@ -11051,6 +11188,13 @@ fsevents@~2.1.2:
   version: 2.0.4
   resolution: "mdn-data@npm:2.0.4"
   checksum: bcecf9ae69505ff20a2913fa29849eec8b17fa7ab8c93e4bbec8020003f7fd9329478fc353e010ff0dbbca12fc296ff8cf40b6a5c93294c92df7dc8343880b99
+  languageName: node
+  linkType: hard
+
+"media-engine@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "media-engine@npm:1.0.3"
+  checksum: abccce2115b9694cf923d2767c38dbbea1638093c25b4c8dcf6df5be8f9cab676dfdbd29bad3ab586e166c57b62c31bb90317cb834b3fdc0af6ecec85e72d400
   languageName: node
   linkType: hard
 
@@ -12095,6 +12239,13 @@ fsevents@~2.1.2:
   version: 2.2.0
   resolution: "p-try@npm:2.2.0"
   checksum: 20983f3765466c1ab617ed153cb53b70ac5df828d854a3334d185e20b37f436e9096f12bc1b7fc96d8908dc927a3685172d3d89e755774f57b7103460c54dcc5
+  languageName: node
+  linkType: hard
+
+"page-wrapping@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "page-wrapping@npm:1.1.0"
+  checksum: 90fd0d6f7f298e37c3340f033aa7cd80f8b2744ec17f427cd7b0a71e1c87e7e390c7c1bb92301daa58b2d97a6dc9c47c4256ca8044d3feabe1e6e9195271a951
   languageName: node
   linkType: hard
 
@@ -13640,6 +13791,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"ramda@npm:^0.26.1":
+  version: 0.26.1
+  resolution: "ramda@npm:0.26.1"
+  checksum: 22e3fbfabdf45d7f7e8e0ff198be6c1f94d1cc16dd68f4c1786436b4583f8f1ef610a3bf0e8e8984c11346791da6ebadbe5b63dd29f2939bdfed7362d277c07b
+  languageName: node
+  linkType: hard
+
 "randombytes@npm:^2.0.0, randombytes@npm:^2.0.1, randombytes@npm:^2.0.5, randombytes@npm:^2.1.0":
   version: 2.1.0
   resolution: "randombytes@npm:2.1.0"
@@ -13782,6 +13940,20 @@ fsevents@~2.1.2:
     "@popperjs/core": ^2.0.0
     react: ^16.8.0 || ^17
   checksum: 0b1303d3285e93245fb7e0460996c4dfd53b66152d09e41b1dcb6c9f99932513bf891b4359511aeb3b17eaa2ae8555129631ca2f61337d461e691104cc454898
+  languageName: node
+  linkType: hard
+
+"react-reconciler@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "react-reconciler@npm:0.24.0"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+    scheduler: ^0.18.0
+  peerDependencies:
+    react: ^16.0.0
+  checksum: 4c6528771b4c8655ecc10878d0f9a366823d174fc1724ba0c025bb336bd9c218d92766047f2c8f3e5d1ea097629232e40992cf3c988b435a0b424f56737cfc9e
   languageName: node
   linkType: hard
 
@@ -14823,6 +14995,16 @@ resolve@^1.1.5:
   dependencies:
     xmlchars: ^2.2.0
   checksum: 6ad14be68da9b84af0fa3de346fd78bd3a8e8a73a462e2852279a1fff1e2619988919294001abe3ecef3783f9498962a0619d960ccca4ec2ca914526fde1acc2
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.18.0":
+  version: 0.18.0
+  resolution: "scheduler@npm:0.18.0"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 007678c559669029a5f8a029022548c2f39258b8087d1da0a3f5c5360abf3aa2794a87f56998151432f48910eca53331206cd712b751188623ca3d1bcab38b9f
   languageName: node
   linkType: hard
 
@@ -17591,5 +17773,14 @@ resolve@^1.1.5:
     y18n: ^5.0.5
     yargs-parser: ^20.2.2
   checksum: a79ce1f043021cd645de1ffebb6149541d382ba68f4a6b5eca5d2ad65af51893371bbd78e240dc3b6cf0cbb419511ba5bda715dec992e4266e6863ea49f14feb
+  languageName: node
+  linkType: hard
+
+"yoga-layout-prebuilt@npm:^1.9.3":
+  version: 1.10.0
+  resolution: "yoga-layout-prebuilt@npm:1.10.0"
+  dependencies:
+    "@types/yoga-layout": 1.9.2
+  checksum: e8db26850d5ea55d0538522245c2343d555e82d3528837cfb371040b4a877a7a4860aeb325e15fa5061bcca0a2dac6abd5af2051f584048009f2c5b4bb8afdf7
   languageName: node
   linkType: hard
