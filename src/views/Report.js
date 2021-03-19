@@ -20,6 +20,8 @@ import {
     TableCell,
 } from '@material-ui/core';
 
+import { styled } from '@material-ui/core/styles';
+
 import { PieChart, Pie, Legend, Cell, Label, LabelList } from 'recharts';
 
 import './Report.css';
@@ -44,11 +46,15 @@ const data = [
 
 const colours = ['#9c27b0', '#2196f3', '#4caf50', '#ff9800', '#f44336', '#795548'];
 
-const styles = {
-    table: {
-        fontSize: '0.7rem'
-    }
-}
+const CTableCell = styled(TableCell)({
+    fontSize: '0.7rem',
+    paddingInline: '8px'
+});
+
+const CTableContainer = styled(TableContainer)({
+    marginTop: '25px',
+    pageBreakInside: 'avoid'
+});
 
 class Report extends React.Component {
     constructor(props) {
@@ -195,7 +201,7 @@ class Report extends React.Component {
                 <Typography variant='subtitle1'>Summary Data</Typography>
                 <Grid container spacing={3} alignItems='stretch'>
                     <Grid item xs={4}>
-                        <TableContainer component={Card} variant='outlined'>
+                        <TableContainer component={Card} variant='outlined' className='fillparent'>
                             <Table size='small'>
                                 <TableBody>
                                     <TableRow>
@@ -207,7 +213,7 @@ class Report extends React.Component {
                                         <TableCell>100</TableCell>
                                     </TableRow>
                                     <TableRow>
-                                        <TableCell>Neuraxial/Regional Cases</TableCell>
+                                        <TableCell>Neuraxial/Regional</TableCell>
                                         <TableCell>100</TableCell>
                                     </TableRow>
                                     <TableRow>
@@ -256,47 +262,47 @@ class Report extends React.Component {
                     </Grid>
                     {Object.keys(this.state.logsByDate).map((date) => (
                         
-                            <TableContainer component={Card} variant='outlined' className='tablecontainer'>
+                            <CTableContainer component={Card} variant='outlined' className='tablecontainer'>
                                 <Table size='small' className='table'>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>{date}</TableCell>
-                                            <TableCell style={{width: '70px'}}>Age</TableCell>
-                                            <TableCell style={{width: '50px'}}>ASA</TableCell>
-                                            <TableCell style={{width: '70px'}}>Location</TableCell>
-                                            <TableCell style={{width: '70px'}}>Staff</TableCell>
-                                            <TableCell style={{width: '70px'}}>Service</TableCell>
-                                            <TableCell style={{width: '70px'}}>Anesthetic Type</TableCell>
-                                            <TableCell style={{width: '70px'}}>Procedures</TableCell>
-                                            <TableCell style={{width: '70px'}}>EPAs</TableCell>
+                                            <CTableCell>{date}</CTableCell>
+                                            <CTableCell style={{width: '70px'}}>Age</CTableCell>
+                                            <CTableCell style={{width: '50px'}}>ASA</CTableCell>
+                                            <CTableCell style={{width: '100px'}}>Location</CTableCell>
+                                            <CTableCell style={{width: '70px'}}>Staff</CTableCell>
+                                            <CTableCell style={{width: '70px'}}>Service</CTableCell>
+                                            <CTableCell style={{width: '70px'}}>Type</CTableCell>
+                                            <CTableCell style={{width: '70px'}}>Procedures</CTableCell>
+                                            <CTableCell style={{width: '70px'}}>EPAs</CTableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {this.state.logsByDate[date].map((log) => (
                                             <React.Fragment>
                                                 <TableRow>
-                                                    <TableCell>{log.case}</TableCell>
-                                                    <TableCell>{log.age}</TableCell>
-                                                    <TableCell>
+                                                    <CTableCell>{log.case}</CTableCell>
+                                                    <CTableCell>{log.age}</CTableCell>
+                                                    <CTableCell>
                                                         {log.asa} {log.e && 'E'}
-                                                    </TableCell>
-                                                    <TableCell>{log.location}</TableCell>
-                                                    <TableCell>{log.staff}</TableCell>
-                                                    <TableCell>{log.service}</TableCell>
-                                                    <TableCell>{log.type}</TableCell>
-                                                    <TableCell>{log.procedures}</TableCell>
-                                                    <TableCell>{log.epas}</TableCell>
+                                                    </CTableCell>
+                                                    <CTableCell>{log.location}</CTableCell>
+                                                    <CTableCell>{log.staff}</CTableCell>
+                                                    <CTableCell>{log.service}</CTableCell>
+                                                    <CTableCell>{log.type}</CTableCell>
+                                                    <CTableCell>{log.procedures}</CTableCell>
+                                                    <CTableCell>{log.epas}</CTableCell>
                                                 </TableRow>
                                                 {log.comments !== '' && (
-                                                    <TableRow>
-                                                        <TableCell colSpan={9}><small>Comments: {log.comments}</small></TableCell>
+                                                    <TableRow selected='true'>
+                                                        <CTableCell colSpan={9}><small>Comments: {log.comments}</small></CTableCell>
                                                     </TableRow>
                                                 )}
                                             </React.Fragment>
                                         ))}
                                     </TableBody>
                                 </Table>
-                            </TableContainer>
+                            </CTableContainer>
                         
                     ))}
                 

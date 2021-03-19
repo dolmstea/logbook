@@ -5,9 +5,15 @@ import 'firebase/auth';
 
 import { Container, TextField, Typography, Box, Button } from '@material-ui/core';
 
+import { styled } from '@material-ui/core/styles';
+
 import { Alert } from '@material-ui/lab';
 
 import { Link } from 'react-router-dom';
+
+const CButton = styled(Button)({
+    textAlign: 'center'
+});
 
 class Auth extends React.Component {
     constructor(props) {
@@ -84,13 +90,13 @@ class Auth extends React.Component {
                             </Button>
                         </Box>
                         <Box mx={1}>
-                            <Link to='/resetPass'>
-                                <Button variant='outlined'>Forgot Password</Button>
+                            <Link to='/resetPass' component={CButton} variant='outlined'>
+                                Forgot Password
                             </Link>
                         </Box>
                         <Box mx={1}>
-                            <Link to='/addUser'>
-                                <Button variant='outlined'>Sign Up</Button>
+                            <Link to='/addUser' component={CButton} variant='outlined'>
+                                Sign Up
                             </Link>
                         </Box>
                     </Box>

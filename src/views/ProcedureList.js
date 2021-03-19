@@ -24,6 +24,7 @@ import {
     ListItemText,
     withWidth,
     Grid,
+    Typography,
 } from '@material-ui/core';
 
 import { KeyboardArrowUp, KeyboardArrowDown, Edit, Delete, Cancel } from '@material-ui/icons';
@@ -32,22 +33,11 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 
 import { red } from '@material-ui/core/colors';
 
-import { styled } from '@material-ui/core/styles';
-
 import { withRouter } from 'react-router';
 
 import Loading from './Loading.js';
 
-//TODO: Sort by date added.
 //FIXME: If you delete all the entries for a given date, the date header still stays on the screen.
-
-const CTableBody = styled(TableBody)({
-    backgroundColor: '#fafafa',
-});
-
-const CTableCell = styled(TableCell)({
-    overflowWrap: 'anywhere',
-});
 
 class LogList extends React.Component {
     constructor(props) {
@@ -72,6 +62,8 @@ class LogList extends React.Component {
         var db = firebase.firestore();
 
         db.collection(this.props.uid)
+            .doc('procedures')
+            .collection('procedures')
             .orderBy('dateAdded')
             .get()
             .then((qs) => {
@@ -187,35 +179,9 @@ class LogList extends React.Component {
                                         <React.Fragment>
                                             <TableHead>
                                                 <TableRow>
-                                                    <TableCell
-                                                        colSpan={this.state.dateExpanded.includes(date) ? 1 : 3}
-                                                    >
-                                                        {date || 'No Date'}
-                                                        <Box ml={1} display='inline'>
-                                                            <Chip label={this.state.logs[date].length} size='small' />
-                                                        </Box>
-                                                    </TableCell>
-                                                    {this.state.dateExpanded.includes(date) && (
-                                                        <React.Fragment>
-                                                            <TableCell align='right'>
-                                                                {this.state.dateExpanded.includes(date) && 'Age'}
-                                                            </TableCell>
-                                                            <TableCell align='right'>
-                                                                {this.state.dateExpanded.includes(date) && 'ASA'}
-                                                            </TableCell>
-                                                        </React.Fragment>
-                                                    )}
+                                                    <TableCell>{date || 'No Date'}</TableCell>
 
-                                                    {this.props.width !== 'xs' && (
-                                                        <TableCell align='right'>
-                                                            {this.state.dateExpanded.includes(date) && 'Location'}
-                                                        </TableCell>
-                                                    )}
-                                                    {this.props.width !== 'xs' && (
-                                                        <TableCell align='right'>
-                                                            {this.state.dateExpanded.includes(date) && 'Staff'}
-                                                        </TableCell>
-                                                    )}
+                                                    <TableCell align='right'>6 Procedures</TableCell>
 
                                                     <TableCell align='right'>
                                                         <IconButton
@@ -234,25 +200,22 @@ class LogList extends React.Component {
                                                 </TableRow>
                                             </TableHead>
                                             {this.state.dateExpanded.includes(date) && (
-                                                <CTableBody>
+                                                <TableBody>
                                                     {this.state.logs[date].map((log) => (
                                                         <React.Fragment>
                                                             <TableRow>
-                                                                <CTableCell>{log.case}</CTableCell>
-                                                                <TableCell align='right'>{log.age}</TableCell>
-                                                                <TableCell align='right'>
-                                                                    {log.asa}
-                                                                    {log.e ? 'E' : ''}
+                                                                <TableCell>
+                                                                    {log.procedures.map((el) => (
+                                                                        <Box ml={1}>
+                                                                            <Chip label={el} />
+                                                                        </Box>
+                                                                    ))}
                                                                 </TableCell>
-                                                                {this.props.width !== 'xs' && (
-                                                                    <TableCell align='right'>{log.location}</TableCell>
-                                                                )}
-                                                                {this.props.width !== 'xs' && (
-                                                                    <TableCell align='right'>{log.staff}</TableCell>
-                                                                )}
+
+                                                                <TableCell align='right'>{log.location}</TableCell>
+
                                                                 <TableCell align='right'>
                                                                     <IconButton
-                                                                        size='small'
                                                                         onClick={() => {
                                                                             this.toggleCollapse(log.id, 'log');
                                                                         }}
@@ -269,15 +232,14 @@ class LogList extends React.Component {
                                                                 <TableRow>
                                                                     <TableCell colSpan={6}>
                                                                         <Collapse
-                                                                            timeout='auto'
                                                                             unmountOnExit
                                                                             in={this.state.expanded.includes(log.id)}
                                                                         >
-                                                                            <List dense={true}>
+                                                                            <List>
                                                                                 <Grid container justify='space-between'>
                                                                                     <Grid item>
                                                                                         <ListSubheader>
-                                                                                            Details
+                                                                                            Comments
                                                                                         </ListSubheader>
                                                                                     </Grid>
                                                                                     <Grid item>
@@ -329,65 +291,14 @@ class LogList extends React.Component {
                                                                                         )}
                                                                                     </Grid>
                                                                                 </Grid>
-                                                                                {this.props.width === 'xs' && (
-                                                                                    <React.Fragment>
-                                                                                        <ListItem>
-                                                                                            <ListItemText primary='Location: ' />
-                                                                                            {log.location !== '' && (
-                                                                                                <Chip
-                                                                                                    label={log.location}
-                                                                                                />
-                                                                                            )}
-                                                                                        </ListItem>
-                                                                                        <ListItem>
-                                                                                            <ListItemText primary='Staff: ' />
-                                                                                            {log.staff !== '' && (
-                                                                                                <Chip
-                                                                                                    label={log.staff}
-                                                                                                />
-                                                                                            )}
-                                                                                        </ListItem>
-                                                                                    </React.Fragment>
+
+                                                                                {log.comments !== '' && (
+                                                                                    <ListItem>
+                                                                                        <ListItemText
+                                                                                            primary={log.comments}
+                                                                                        />
+                                                                                    </ListItem>
                                                                                 )}
-                                                                                <ListItem>
-                                                                                    <ListItemText primary='Service: ' />
-                                                                                    {log.service !== '' && (
-                                                                                        <Chip label={log.service} />
-                                                                                    )}
-                                                                                </ListItem>
-                                                                                <ListItem>
-                                                                                    <ListItemText primary='Anesthetic Type: ' />
-                                                                                    {log.type.map((el) => (
-                                                                                        <Box ml={1}>
-                                                                                            <Chip label={el} />
-                                                                                        </Box>
-                                                                                    ))}
-                                                                                </ListItem>
-                                                                                <ListItem>
-                                                                                    <ListItemText primary='Procedures: ' />
-                                                                                    {log.procedures.map((el) => (
-                                                                                        <Box ml={1}>
-                                                                                            <Chip label={el} />
-                                                                                        </Box>
-                                                                                    ))}
-                                                                                </ListItem>
-                                                                                <ListItem>
-                                                                                    <ListItemText primary='EPAs: ' />
-                                                                                    {log.epas.map(
-                                                                                        (el) =>
-                                                                                            el !== '' && (
-                                                                                                <Box mr={1}>
-                                                                                                    <Chip label={el} />
-                                                                                                </Box>
-                                                                                            )
-                                                                                    )}
-                                                                                </ListItem>
-                                                                                <ListItem>
-                                                                                    <ListItemText
-                                                                                        primary='Comments: '
-                                                                                        secondary={log.comments}
-                                                                                    />
-                                                                                </ListItem>
                                                                             </List>
                                                                         </Collapse>
                                                                     </TableCell>
@@ -395,7 +306,7 @@ class LogList extends React.Component {
                                                             )}
                                                         </React.Fragment>
                                                     ))}
-                                                </CTableBody>
+                                                </TableBody>
                                             )}
                                         </React.Fragment>
                                     ))}

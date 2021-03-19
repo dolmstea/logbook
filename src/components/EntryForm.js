@@ -10,13 +10,9 @@ import {
     InputLabel,
     FormControlLabel,
     Grid,
-    InputAdornment,
-    Button,
 } from '@material-ui/core';
 
 import { Autocomplete } from '@material-ui/lab';
-
-import { CheckBoxOutlineBlank, CheckBox } from '@material-ui/icons';
 
 const locations = ['VGH', 'SPH', 'RCH', 'BCWH/BCCH', 'LGH', 'Victoria'];
 

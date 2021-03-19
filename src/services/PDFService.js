@@ -6,6 +6,7 @@ import 'firebase/firestore';
 
 //import * as d3 from 'd3';
 //import Chart from 'chart.js';
+import QuickChart from 'quickchart-js';
 
 //pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -66,11 +67,11 @@ class PDFService {
 
         for (var date in logsByDate) {
             var thisTable = {
-                layout: 'lightHorizontalLine',
-                fontSize: 10,
+                layout: 'lightHorizontalLines',
+                style: 'table',
                 table: {
                     headerRows: 1,
-                    widths: ['auto', 20, 20, '*', '*', '*', '*', '*', '*'],
+                    widths: ['*', 15, 16, 40, 50, 50, 50, 50, 30],
                     body: [
                         [
                             date === '' ? 'No Date' : date,
@@ -79,7 +80,7 @@ class PDFService {
                             'Location',
                             'Staff',
                             'Service',
-                            'Anaesthetic Type',
+                            'Type',
                             'Procedures',
                             'EPAs',
                         ],
@@ -149,6 +150,7 @@ class PDFService {
                     thisTable.table.body.push([
                         {
                             text: `Comments: ${log.comments}`,
+                            fontSize: 6,
                             colSpan: 9,
                         },
                     ]);
@@ -163,7 +165,6 @@ class PDFService {
         //Prototype for PDF data.
         var ts = [
             {
-                layout: 'lightHorizontalLine',
                 table: {
                     headerRows: 1,
                     widths: [],
@@ -179,19 +180,46 @@ class PDFService {
         ];
 
         //Generate pie chart.
-        //var ctx = document.createElement('canvas');
-        //var chart = new Chart(ctx, {
-        //    type: 'pie',
-        //    data: {
-        //        datasets: [
-        //            {
-        //                data: [asa1, asa2, asa3, asa4, asa5],
-        //            },
-        //        ],
-        //        labels: ['ASA I', 'ASA II', 'ASA III', 'ASA IV', 'ASA V'],
-        //    },
-        //});
-        //var img = chart.toBase64Image();
+        const chartHeight = 130;
+        const chartWidth = 250;
+
+        const chart = new QuickChart();
+        chart
+            .setConfig({
+                type: 'pie',
+                data: {
+                    datasets: [
+                        {
+                            data: [10, 20, 10, 20, 30, 0],
+                        },
+                    ],
+                    labels: ['ASA I', 'ASA II', 'ASA III', 'ASA IV', 'ASA V', 'ASA VI'],
+                },
+                options: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            fontColor: '#000000',
+                            fontSize: 60
+                        },
+                        
+                    },
+                    plugins: {
+                        datalabels: {
+                            color: '#000000',
+                            font: {
+                                size: 60
+                            }
+                        }
+                    }
+                }
+            })
+            .setWidth(chartWidth * 8)
+            .setHeight(chartHeight * 8)
+            .setBackgroundColor('transparent');
+
+        const chartDataUrl = await chart.toDataUrl();
+        const chartUrl = chart.getUrl();
 
         pdfMake.fonts = {
             Roboto: {
@@ -203,51 +231,59 @@ class PDFService {
             },
         };
 
+        pdfMake.tableLayouts = {
+            custom: {
+                hLineWidth: (i) => 0.25,
+                vLineWidth: (i) => 0.25
+            }
+        };
+
         var docDefinition = {
-            //defaultStyle: {
-            //    font: 'Roboto',
-            //},
+            defaultStyle: {
+                fontSize: 10,
+            },
             styles: {
                 table: {
-                    fontSize: 10,
+                    fontSize: 8,
                 },
             },
             content: [
-                { text: 'Anaesthesia Logbook Report', bold: true, fontSize: 24 },
-                '\n',
-                'Logbook Data from  to  inclusive.',
-                '\n',
-                { text: 'David Olmstead' },
-                '\n',
-                { text: `Generated: ${new Date().toDateString()}` },
+                { text: 'Anesthesia Logbook Report', bold: true, fontSize: 24 },
+
+                { text: 'David Olmstead', alignment: 'right', bold: true, fontSize: 12 },
+                { text: 'January 30, 2021 - March 28, 2021', alignment: 'right' },
+                { text: `Generated ${new Date().toDateString()}`, alignment: 'right' },
                 '\n',
 
                 { text: 'Summary Data', bold: true },
 
+                '\n',
+
                 {
                     columns: [
-                        [
-                            'Total Cases: ',
-                            'General Cases: ',
-                            'Spinal Cases: ',
-                            'Intubations: ',
-                            'Spinals: ',
-                            'IVs: ',
-                            'Art Lines: ',
-                            'Central Lines: ',
-                            'Regional Blocks: ',
-                        ],
-                        [
-                            totalCases,
-                            generalCases,
-                            spinalCases,
-                            intubations,
-                            spinals,
-                            ivs,
-                            artLines,
-                            centralLines,
-                            regionalBlocks,
-                        ],
+                        {
+                            table: {
+                                widths: ['*', 'auto'],
+                                body: [
+                                    ['Total Cases: ', totalCases],
+                                    ['General Cases: ', generalCases],
+                                    ['Spinal Cases: ', spinalCases],
+                                    ['Intubations: ', intubations],
+                                    ['Spinals: ', spinals],
+                                    ['IVs: ', ivs],
+                                    ['Arterial Lines:', artLines],
+                                    ['Central Lines:', centralLines],
+                                ],
+                            },
+                            width: '*',
+                            layout: 'lightHorizontalLines'
+                        },
+                        {
+                            image: chartDataUrl,
+                            margin: [0, 0, 0, 0],
+                            height: chartHeight,
+                            width: chartWidth
+                        },
                     ],
                 },
 
@@ -265,13 +301,13 @@ class PDFService {
                 columns: [
                     {
                         text: 'Generated using Logbook software by David Olmstead.',
-                        fontSize: 10,
-                        margin: [40, 0, 0, 0],
+                        fontSize: 6,
+                        margin: [40, 10, 0, 0],
                     },
                     {
                         text: 'v1.0',
-                        fontSize: 10,
-                        margin: [0, 0, 40, 0],
+                        fontSize: 6,
+                        margin: [0, 10, 40, 0],
                         alignment: 'right',
                     },
                 ],

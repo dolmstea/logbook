@@ -7,7 +7,6 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
 import firebase from 'firebase/app';
-import 'semantic-ui-css/semantic.min.css';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCwqRdCcP5CJLJRhhwIYEwHM-YlQ6S_YDI",

@@ -1,3 +1,8 @@
+//TODO: Reset password form needs a cancel button.
+//TODO: Put the whole dataset in the application state/redux store.
+//TODO: Could add more Collapses to the LogList.
+//FIXME: When you edit a log and delete the comment, then click update, the comment is still there. I suspect the router is just going back without reloading the page. Updating the case title works though.
+
 import React from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -11,14 +16,27 @@ import './App.css';
 
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 
-import { AppBar, Toolbar, Typography, Box, IconButton, Menu, MenuItem } from '@material-ui/core';
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Box,
+    IconButton,
+    Menu,
+    MenuItem,
+    Button,
+    ButtonGroup,
+    withWidth,
+} from '@material-ui/core';
 
 import { AccountCircle, Add } from '@material-ui/icons';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider, styled } from '@material-ui/core/styles';
 
 import LogList from './views/LogList.js';
+import ProcedureList from './views/ProcedureList.js';
 import NewEntry from './views/NewEntry.js';
+import NewProcedure from './views/NewProcedure.js';
 import EditEntry from './views/EditEntry.js';
 import Auth from './views/Auth.js';
 import NewUser from './views/NewUser.js';
@@ -28,6 +46,8 @@ import EditProfile from './views/EditProfile.js';
 import Loading from './views/Loading.js';
 import Report from './views/Report.js';
 import PDFService from './services/PDFService.js';
+//import JSPDFService from './services/JSPDFService.js';
+//import ChartistPDFService from './services/ChartistPDFService.js';
 
 //const LogList = React.lazy(() => import('./views/LogList.js'));
 //const NewEntry = React.lazy(() => import('./views/NewEntry.js'));
@@ -35,12 +55,21 @@ import PDFService from './services/PDFService.js';
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#b71c1c',
+            main: '#0096a5',
         },
         secondary: {
-            main: '#303f9f',
+            main: '#7cb342',
         },
     },
+});
+
+const CButtonGroup = styled(ButtonGroup)({
+    //color: '#f5f5f5',
+});
+
+const CButton = styled(({ isActive, ...other }) => <Button {...other} />)({
+    backgroundColor: (props) => props.isActive && '#56c7d6',
+    borderColor: '#006876',
 });
 
 class App extends React.Component {
@@ -48,6 +77,7 @@ class App extends React.Component {
         super(props);
         this.state = {
             menuAnchor: null,
+            newItemMenuAnchor: null,
             isLoading: true,
         };
 
@@ -55,7 +85,12 @@ class App extends React.Component {
         this.genPdf = this.genPdf.bind(this);
         this.openMenu = this.openMenu.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
+        this.openNewItemMenu = this.openNewItemMenu.bind(this);
+        this.closeNewItemMenu = this.closeNewItemMenu.bind(this);
 
+        this.stagingArea = React.createRef();
+
+        /*
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 this.props.logIn(user.uid);
@@ -66,6 +101,7 @@ class App extends React.Component {
                 isLoading: false,
             });
         });
+        */
     }
 
     signOut() {
@@ -89,8 +125,33 @@ class App extends React.Component {
         });
     }
 
+    openNewItemMenu(event) {
+        this.setState({
+            newItemMenuAnchor: event.currentTarget,
+        });
+    }
+
+    closeNewItemMenu() {
+        this.setState({
+            newItemMenuAnchor: null,
+        });
+    }
+
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.props.logIn(user.uid);
+            } else {
+                this.props.logOut();
+            }
+            this.setState({
+                isLoading: false,
+            });
+        });
+    }
+
     render() {
-        console.log(this.props.uid ? 'Logged in.' : 'Logged out.');
+        //console.log(this.props.uid ? 'Logged in.' : 'Logged out.');
         return (
             <ThemeProvider theme={theme}>
                 <Router>
@@ -103,44 +164,133 @@ class App extends React.Component {
                         <Route path='/'>
                             <AppBar position='static'>
                                 <Toolbar variant='dense' className='toolbar'>
-                                    <Link to='/' className='notUnderlined notALink appBarTitle'>
-                                        <Box display='flex' flexDirection='row'>
-                                            <Typography variant='h6'>\\ Logbook</Typography>
-                                            <Typography variant='subtitle2'>&beta;</Typography>
-                                        </Box>
-                                    </Link>
+                                    <Box flexGrow={1}>
+                                        <Link to='/' className='notUnderlined notALink appBarTitle'>
+                                            <Box display='flex' flexDirection='row'>
+                                                <Typography variant='h6'>\\ Logbook</Typography>
+                                                <Typography variant='subtitle2'>&beta;</Typography>
+                                            </Box>
+                                        </Link>
+                                    </Box>
+                                    <Route path='/list'>
+                                        {this.props.uid && (
+                                            <CButtonGroup color='inherit'>
+                                                <CButton isActive>{this.props.width === 'xs' ? 'C' : 'Cases'}</CButton>
+                                                <Link component={CButton} to='/procList'>
+                                                    {this.props.width === 'xs' ? 'P' : 'Procedures'}
+                                                </Link>
+                                            </CButtonGroup>
+                                        )}
+                                    </Route>
+                                    <Route path='/procList'>
+                                        {this.props.uid && (
+                                            <CButtonGroup color='inherit'>
+                                                <Link component={CButton} to='/list'>
+                                                    {this.props.width === 'xs' ? 'C' : 'Cases'}
+                                                </Link>
+                                                <CButton isActive>
+                                                    {this.props.width === 'xs' ? 'P' : 'Procedures'}
+                                                </CButton>
+                                            </CButtonGroup>
+                                        )}
+                                    </Route>
                                     {this.props.uid && (
-                                        <React.Fragment>
-                                            <Link to='/new' className='notALink'>
-                                                <IconButton color='inherit'>
+                                        <Box flexGrow={1} display='flex' justifyContent='flex-end'>
+                                            <React.Fragment>
+                                                <IconButton onClick={this.openNewItemMenu} color='inherit'>
                                                     <Add />
                                                 </IconButton>
-                                            </Link>
-                                            <IconButton onClick={this.openMenu} color='inherit'>
-                                                <AccountCircle />
-                                            </IconButton>
-                                            <Menu
-                                                anchorEl={this.state.menuAnchor}
-                                                keepMounted
-                                                open={Boolean(this.state.menuAnchor)}
-                                                onClose={this.closeMenu}
-                                                anchorOrigin={{
-                                                    vertical: 'top',
-                                                    horizontal: 'right',
-                                                }}
-                                                transformOrigin={{
-                                                    vertical: 'top',
-                                                    horizontal: 'right',
-                                                }}
-                                            >
-                                                <Link to='/profile' className='notALinkBlack'>
-                                                    <MenuItem onClick={this.closeMenu}>Profile</MenuItem>
-                                                </Link>
-                                                <Link to='/report' target='_blank' className='notALinkBlack'>
-                                                    <MenuItem>Generate PDF Report</MenuItem>
-                                                </Link>
-                                                <Link to='/' className='notALinkBlack'>
+                                                <Menu
+                                                    anchorEl={this.state.newItemMenuAnchor}
+                                                    keepMounted
+                                                    open={Boolean(this.state.newItemMenuAnchor)}
+                                                    onClose={this.closeNewItemMenu}
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'right',
+                                                    }}
+                                                    transformOrigin={{
+                                                        vertical: 'top',
+                                                        horizontal: 'right',
+                                                    }}
+                                                >
                                                     <MenuItem
+                                                        component={Link}
+                                                        to='/newCase'
+                                                        onClick={this.closeNewItemMenu}
+                                                    >
+                                                        Case
+                                                    </MenuItem>
+
+                                                    <MenuItem
+                                                        component={Link}
+                                                        to='/newProc'
+                                                        onClick={this.closeNewItemMenu}
+                                                    >
+                                                        Procedure
+                                                    </MenuItem>
+                                                </Menu>
+                                                <IconButton onClick={this.openMenu} color='inherit'>
+                                                    <AccountCircle />
+                                                </IconButton>
+                                                <Menu
+                                                    anchorEl={this.state.menuAnchor}
+                                                    keepMounted
+                                                    open={Boolean(this.state.menuAnchor)}
+                                                    onClose={this.closeMenu}
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'right',
+                                                    }}
+                                                    transformOrigin={{
+                                                        vertical: 'top',
+                                                        horizontal: 'right',
+                                                    }}
+                                                >
+                                                    <MenuItem onClick={this.closeMenu} component={Link} to='/profile'>
+                                                        Profile
+                                                    </MenuItem>
+
+                                                    <MenuItem
+                                                        onClick={() => {
+                                                            const svc = new PDFService(this.props.uid);
+                                                            svc.genPDF();
+                                                            this.closeMenu();
+                                                        }}
+                                                    >
+                                                        Generate PDF Report
+                                                    </MenuItem>
+
+                                                    {/*
+                                                    <MenuItem
+                                                        onClick={() => {
+                                                            const svc = new JSPDFService(
+                                                                this.props.uid,
+                                                                this.stagingArea
+                                                            );
+                                                            svc.genPDF();
+                                                            this.closeMenu();
+                                                        }}
+                                                    >
+                                                        jsPDF
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        onClick={() => {
+                                                            const svc = new ChartistPDFService(
+                                                                this.props.uid,
+                                                                this.stagingArea
+                                                            );
+                                                            svc.genPDF();
+                                                            this.closeMenu();
+                                                        }}
+                                                    >
+                                                        ChartistPDF
+                                                    </MenuItem>
+                                                    */}
+
+                                                    <MenuItem
+                                                        component={Link}
+                                                        to='/'
                                                         onClick={() => {
                                                             this.closeMenu();
                                                             this.signOut();
@@ -148,9 +298,9 @@ class App extends React.Component {
                                                     >
                                                         Sign Out
                                                     </MenuItem>
-                                                </Link>
-                                            </Menu>
-                                        </React.Fragment>
+                                                </Menu>
+                                            </React.Fragment>
+                                        </Box>
                                     )}
                                 </Toolbar>
                             </AppBar>
@@ -175,8 +325,18 @@ class App extends React.Component {
                                         </Route>
                                     )}
                                     {this.props.uid && (
-                                        <Route path='/new'>
+                                        <Route path='/procList'>
+                                            <ProcedureList />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/newCase'>
                                             <NewEntry />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/newProc'>
+                                            <NewProcedure />
                                         </Route>
                                     )}
                                     {this.props.uid && (
@@ -224,4 +384,4 @@ const mapDispatchToProps = {
     logOut,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(withWidth()(App));

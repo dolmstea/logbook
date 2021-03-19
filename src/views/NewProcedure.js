@@ -13,9 +13,9 @@ import 'firebase/firestore';
 
 import { withRouter } from 'react-router-dom';
 
-import EntryForm from '../components/EntryForm.js';
+import ProcedureForm from '../components/ProcedureForm.js';
 
-class NewEntry extends React.Component {
+class NewProcedure extends React.Component {
     constructor(props) {
         super(props);
 
@@ -26,15 +26,7 @@ class NewEntry extends React.Component {
         this.state = {
             date: dateString,
             location: '',
-            age: '',
-            asa: '',
-            e: false,
-            service: '',
-            type: [],
             procedures: [],
-            epas: [],
-            case: '',
-            staff: '',
             comments: '',
         };
 
@@ -46,7 +38,7 @@ class NewEntry extends React.Component {
     handleChange(event) {
         const target = event.target;
         const name = target.name;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const value = target.value;
 
         this.setState({
             [name]: value,
@@ -66,13 +58,13 @@ class NewEntry extends React.Component {
 
         data.dateAdded = Date.now();
 
-        await db.collection(this.props.uid).add(data);
+        await db.collection(this.props.uid).doc('procedures').collection('procedures').add(data);
     }
 
     render() {
         return (
             <Container maxWidth='sm'>
-                <EntryForm
+                <ProcedureForm
                     title='New Entry'
                     data={this.state}
                     handleChange={this.handleChange}
@@ -103,7 +95,7 @@ class NewEntry extends React.Component {
                                     e: false,
                                     service: '',
                                     type: [],
-                                    procedures: [],
+                                    procedure: '',
                                     epas: [],
                                     case: '',
                                     staff: '',
@@ -134,6 +126,6 @@ const mapStateToProps = (state) => ({
     uid: state,
 });
 
-const HOCNewEntry = withRouter(NewEntry);
+const HOCNewProcedure = withRouter(NewProcedure);
 
-export default connect(mapStateToProps, null)(HOCNewEntry);
+export default connect(mapStateToProps, null)(HOCNewProcedure);

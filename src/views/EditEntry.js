@@ -13,7 +13,7 @@ import 'firebase/firestore';
 
 import { withRouter } from 'react-router-dom';
 
-import EntryForm from './EntryForm.js';
+import EntryForm from '../components/EntryForm.js';
 
 class EditEntry extends React.Component {
     constructor(props) {

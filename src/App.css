@@ -1,5 +1,11 @@
+/*
 .appBarTitle {
   flex-grow: 1
+}
+*/
+
+.buttonSelected {
+  background-color: #3e2723
 }
 
 .notUnderlined {

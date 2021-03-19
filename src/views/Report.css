@@ -2,14 +2,6 @@
     height: 100%
 }
 
-.tablecontainer {
-    page-break-inside: avoid
-}
-
 .table {
     table-layout: fixed;
-}
-
-.tablecell {
-    font-size: 0.5rem
 }
