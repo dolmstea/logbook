@@ -104,7 +104,7 @@ class LogList extends React.Component {
     }
 
     handleEdit(log) {
-        this.props.history.push('/edit', log);
+        this.props.history.push('/editProc', log);
     }
 
     armDelete(id) {

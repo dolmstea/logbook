@@ -38,6 +38,7 @@ import ProcedureList from './views/ProcedureList.js';
 import NewEntry from './views/NewEntry.js';
 import NewProcedure from './views/NewProcedure.js';
 import EditEntry from './views/EditEntry.js';
+import EditProcedure from './views/EditProcedure.js';
 import Auth from './views/Auth.js';
 import NewUser from './views/NewUser.js';
 import PassReset from './views/PassReset.js';
@@ -307,64 +308,69 @@ class App extends React.Component {
                             {this.state.isLoading ? (
                                 <Loading />
                             ) : (
-                                <Switch>
-                                    <Route path='/loading'>
-                                        {' '}
-                                        {/* This is just for testing. */}
-                                        <Loading />
-                                    </Route>
-                                    <Route path='/addUser'>
-                                        <NewUser />
-                                    </Route>
-                                    <Route path='/resetPass'>
-                                        <PassReset />
-                                    </Route>
-                                    {this.props.uid && (
-                                        <Route path='/list'>
-                                            <LogList />
+                                    <Switch>
+                                        <Route path='/loading'>
+                                            {' '}
+                                            {/* This is just for testing. */}
+                                            <Loading />
                                         </Route>
-                                    )}
-                                    {this.props.uid && (
-                                        <Route path='/procList'>
-                                            <ProcedureList />
+                                        <Route path='/addUser'>
+                                            <NewUser />
                                         </Route>
-                                    )}
-                                    {this.props.uid && (
-                                        <Route path='/newCase'>
-                                            <NewEntry />
+                                        <Route path='/resetPass'>
+                                            <PassReset />
                                         </Route>
-                                    )}
-                                    {this.props.uid && (
-                                        <Route path='/newProc'>
-                                            <NewProcedure />
-                                        </Route>
-                                    )}
-                                    {this.props.uid && (
-                                        <Route path='/edit'>
-                                            <EditEntry />
-                                        </Route>
-                                    )}
-                                    {this.props.uid && (
-                                        <Route path='/profile'>
-                                            <Profile />
-                                        </Route>
-                                    )}
-                                    {this.props.uid && (
-                                        <Route path='/editProfile'>
-                                            <EditProfile />
-                                        </Route>
-                                    )}
-                                    {this.props.uid && (
-                                        <Route path='/report'>
-                                            <Report />
-                                        </Route>
-                                    )}
-                                    <Route path='/'>{this.props.uid ? <Redirect to='/list' /> : <Auth />}</Route>
-                                </Switch>
-                            )}
+                                        {this.props.uid && (
+                                            <Route path='/list'>
+                                                <LogList />
+                                            </Route>
+                                        )}
+                                        {this.props.uid && (
+                                            <Route path='/procList'>
+                                                <ProcedureList />
+                                            </Route>
+                                        )}
+                                        {this.props.uid && (
+                                            <Route path='/newCase'>
+                                                <NewEntry />
+                                            </Route>
+                                        )}
+                                        {this.props.uid && (
+                                            <Route path='/newProc'>
+                                                <NewProcedure />
+                                            </Route>
+                                        )}
+                                        {this.props.uid && (
+                                            <Route path='/edit'>
+                                                <EditEntry />
+                                            </Route>
+                                        )}
+                                        {this.props.uid && (
+                                            <Route path='/editProc'>
+                                                <EditProcedure />
+                                            </Route>
+                                        )}
+                                        {this.props.uid && (
+                                            <Route path='/profile'>
+                                                <Profile />
+                                            </Route>
+                                        )}
+                                        {this.props.uid && (
+                                            <Route path='/editProfile'>
+                                                <EditProfile />
+                                            </Route>
+                                        )}
+                                        {this.props.uid && (
+                                            <Route path='/report'>
+                                                <Report />
+                                            </Route>
+                                        )}
+                                        <Route path='/'>{this.props.uid ? <Redirect to='/list' /> : <Auth />}</Route>
+                                    </Switch>
+                                )}
                             <Box mt={4}>
                                 <Typography variant='body2' align='center'>
-                                    &copy; 2020 David Olmstead
+                                    &copy; 2021 David Olmstead
                                 </Typography>
                             </Box>
                         </Route>
