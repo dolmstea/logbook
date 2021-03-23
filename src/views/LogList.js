@@ -187,13 +187,16 @@ class LogList extends React.Component {
                                         <React.Fragment>
                                             <TableHead>
                                                 <TableRow>
-                                                    <TableCell
-                                                        colSpan={this.state.dateExpanded.includes(date) ? 1 : 3}
-                                                    >
+                                                    <TableCell colSpan={this.state.dateExpanded.includes(date) ? 1 : 3}>
                                                         {date || 'No Date'}
-                                                        <Box ml={1} display='inline'>
-                                                            <Chip label={this.state.logs[date].length} size='small' />
-                                                        </Box>
+                                                        {!this.state.dateExpanded.includes(date) && (
+                                                            <Box ml={1} display='inline'>
+                                                                <Chip
+                                                                    label={this.state.logs[date].length}
+                                                                    size='small'
+                                                                />
+                                                            </Box>
+                                                        )}
                                                     </TableCell>
                                                     {this.state.dateExpanded.includes(date) && (
                                                         <React.Fragment>
@@ -233,6 +236,7 @@ class LogList extends React.Component {
                                                     </TableCell>
                                                 </TableRow>
                                             </TableHead>
+                                            
                                             {this.state.dateExpanded.includes(date) && (
                                                 <CTableBody>
                                                     {this.state.logs[date].map((log) => (
@@ -397,6 +401,7 @@ class LogList extends React.Component {
                                                     ))}
                                                 </CTableBody>
                                             )}
+                                            
                                         </React.Fragment>
                                     ))}
                                 </Table>

@@ -209,7 +209,8 @@ class PDFService {
                             color: '#000000',
                             font: {
                                 size: 60
-                            }
+                            },
+                            display: (context) => context.dataset.data[context.dataIndex] !== 0
                         }
                     }
                 }
