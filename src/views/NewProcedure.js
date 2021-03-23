@@ -26,7 +26,7 @@ class NewProcedure extends React.Component {
         this.state = {
             date: dateString,
             location: '',
-            procedures: [],
+            procedure: '',
             comments: '',
         };
 
@@ -90,15 +90,7 @@ class NewProcedure extends React.Component {
                                 this.setState({
                                     date: '',
                                     location: '',
-                                    age: '',
-                                    asa: '',
-                                    e: false,
-                                    service: '',
-                                    type: [],
                                     procedure: '',
-                                    epas: [],
-                                    case: '',
-                                    staff: '',
                                     comments: '',
                                 });
                             }}

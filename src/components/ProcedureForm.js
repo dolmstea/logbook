@@ -41,12 +41,11 @@ class ProcedureForm extends React.Component {
                 />
                 <Autocomplete
                     freeSolo
-                    multiple
                     options={procedures}
-                    value={this.props.data.procedures}
-                    onChange={(event, value, reason) => this.props.handleChangeAC('procedures', value)}
+                    value={this.props.data.procedure}
+                    onChange={(event, value, reason) => this.props.handleChangeAC('procedure', value)}
                     renderInput={(params) => (
-                        <TextField {...params} margin='normal' variant='outlined' label='Procedures' />
+                        <TextField {...params} margin='normal' variant='outlined' label='Procedure' />
                     )}
                 />
                 <TextField

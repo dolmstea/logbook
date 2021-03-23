@@ -54,6 +54,7 @@ class PDFService {
         var asa3 = 0;
         var asa4 = 0;
         var asa5 = 0;
+        var asa6 = 0;
 
         qs.forEach((doc) => {
             const data = doc.data();
@@ -132,6 +133,9 @@ class PDFService {
                     case '5':
                         asa5++;
                         break;
+                    case '6':
+                        asa6++;
+                        break;
                 }
 
                 thisTable.table.body.push([
@@ -190,7 +194,8 @@ class PDFService {
                 data: {
                     datasets: [
                         {
-                            data: [10, 20, 10, 20, 30, 0],
+                            data: [asa1, asa2, asa3, asa4, asa5, asa6],
+                            backgroundColor: ['#2196f3', '#4caf50', '#ffeb3b', '#ff9800', '#f44336', '#795548'],
                         },
                     ],
                     labels: ['ASA I', 'ASA II', 'ASA III', 'ASA IV', 'ASA V', 'ASA VI'],
@@ -200,7 +205,7 @@ class PDFService {
                         position: 'right',
                         labels: {
                             fontColor: '#000000',
-                            fontSize: 60
+                            fontSize: 60,
                         },
                         
                     },
@@ -209,7 +214,9 @@ class PDFService {
                             color: '#000000',
                             font: {
                                 size: 60
-                            }
+                            },
+                            //anchor: 'end',
+                            //display: 'auto',
                         }
                     }
                 }
