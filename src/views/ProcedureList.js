@@ -35,7 +35,7 @@ import { red } from '@material-ui/core/colors';
 
 import { withRouter } from 'react-router';
 
-import Loading from './Loading.js';
+import Loading from '../components/Loading.js';
 
 //FIXME: If you delete all the entries for a given date, the date header still stays on the screen.
 

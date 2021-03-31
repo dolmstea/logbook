@@ -13,21 +13,23 @@ import 'firebase/firestore';
 
 import { withRouter } from 'react-router-dom';
 
+import { format } from 'date-fns';
+
 import EntryForm from '../components/EntryForm.js';
 
 class NewEntry extends React.Component {
     constructor(props) {
         super(props);
 
-        var date = new Date();
+        //var date = new Date();
 
-        var dateString = date.toISOString().substring(0, 10);
+        //var dateString = date.toISOString().substring(0, 10);
 
         this.state = {
-            date: dateString,
+            date: new Date(),
             location: '',
             age: '',
-            asa: '',
+            asa: '1',
             e: false,
             service: '',
             type: [],
@@ -39,6 +41,7 @@ class NewEntry extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleDateChange = this.handleDateChange.bind(this);
         this.handleChangeAC = this.handleChangeAC.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -53,6 +56,12 @@ class NewEntry extends React.Component {
         });
     }
 
+    handleDateChange(date) {
+        this.setState({
+            date: date
+        });
+    }
+
     handleChangeAC(key, value) {
         this.setState({
             [key]: value,
@@ -63,6 +72,8 @@ class NewEntry extends React.Component {
         var db = firebase.firestore();
 
         var data = this.state;
+
+        data.date = format(data.date, 'y-MM-dd');
 
         data.dateAdded = Date.now();
 
@@ -76,6 +87,7 @@ class NewEntry extends React.Component {
                     title='New Entry'
                     data={this.state}
                     handleChange={this.handleChange}
+                    handleDateChange={this.handleDateChange}
                     handleChangeAC={this.handleChangeAC}
                 />
                 <Box display='flex' justifyContent='center' pt={2}>
@@ -96,10 +108,10 @@ class NewEntry extends React.Component {
                             onClick={() => {
                                 this.handleSubmit();
                                 this.setState({
-                                    date: '',
+                                    date: new Date(),
                                     location: '',
                                     age: '',
-                                    asa: '',
+                                    asa: '1',
                                     e: false,
                                     service: '',
                                     type: [],

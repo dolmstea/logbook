@@ -1,4 +1,32 @@
-import pdfMake from 'pdfmake/build/pdfmake';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: PDFService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: PDFService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import pdfMake from 'pdfmake/build/pdfmake';
 //import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import firebase from 'firebase/app';
@@ -8,20 +36,17 @@ import 'firebase/firestore';
 //import Chart from 'chart.js';
 import QuickChart from 'quickchart-js';
 
-import { format, parse } from 'date-fns';
-
 //pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 //TODO: Add number of procedures done.
 
-/** Class representing the PDF Service. */
 class PDFService {
     /**
-     * Create an instance of PDFService.
+     * 
      * @constructor
-     * @param {*} userID
-     * @param {Date} startDate
-     * @param {Date} endDate
+     * @param {*} userID 
+     * @param {Date} startDate 
+     * @param {Date} endDate 
      */
     constructor(userID, startDate, endDate) {
         this.userID = userID;
@@ -46,18 +71,12 @@ class PDFService {
 
         console.log(this.userID);
 
-        if (this.startDate && this.endDate) {
-            var startDateString = format(this.startDate, 'y-MM-dd');
-            var endDateString = format(this.endDate, 'y-MM-dd');
-            var qs = await db
-                .collection(this.userID)
-                .where('date', '>=', startDateString)
-                .where('date', '<=', endDateString)
-                .orderBy('date')
-                .get();
+        if(this.startDate &amp;&amp; this.endDate) {
+            var qs = await db.collection(this.userID).where('date', '&lt;=', this.startDate).where('date', '>=', this.endDate).orderBy('date').get();
         } else {
             var qs = await db.collection(this.userID).orderBy('date').get();
         }
+
 
         var tables = [];
         var logsByDate = {};
@@ -230,8 +249,8 @@ class PDFService {
                             left: 75,
                             right: 0,
                             top: 75,
-                            bottom: 75,
-                        },
+                            bottom: 75
+                        }
                     },
                     legend: {
                         position: 'right',
@@ -250,13 +269,13 @@ class PDFService {
                             anchor: (context) => {
                                 var data = context.dataset.data;
                                 var total = 0;
-                                for (var i of data) {
-                                    total += i;
+                                for(var i of data) {
+                                    total += i
                                 }
                                 return data[context.dataIndex] / total >= 0.1 ? 'center' : 'end';
                             },
                             align: 'end',
-                            offset: 16,
+                            offset: 16
                         },
                     },
                 },
@@ -285,22 +304,6 @@ class PDFService {
             },
         };
 
-        if (this.startDate && this.endDate) {
-            var dateRangeText = `${format(this.startDate, 'MMMM d, y')} - ${format(this.endDate, 'MMMM d, y')}`;
-        } else {
-            var lbdKeys = Object.keys(logsByDate);
-            lbdKeys.sort();
-            var firstDateShortString = lbdKeys[0];
-            var lastDateShortString = lbdKeys[lbdKeys.length - 1];
-
-            var firstDateLongString = format(parse(firstDateShortString, 'y-MM-dd', new Date()), 'MMMM d, y');
-            var lastDateLongString = format(parse(lastDateShortString, 'y-MM-dd', new Date()), 'MMMM d, y');
-
-            var dateRangeText = `${firstDateLongString} - ${lastDateLongString}`;
-        }
-
-
-
         var docDefinition = {
             defaultStyle: {
                 fontSize: 10,
@@ -314,7 +317,7 @@ class PDFService {
                 { text: 'Anesthesia Logbook Report', bold: true, fontSize: 24 },
 
                 { text: 'David Olmstead', alignment: 'right', bold: true, fontSize: 12 },
-                { text: dateRangeText, alignment: 'right' },
+                { text: 'January 30, 2021 - March 28, 2021', alignment: 'right' },
                 { text: `Generated ${new Date().toDateString()}`, alignment: 'right' },
                 '\n',
 
@@ -384,3 +387,26 @@ class PDFService {
 }
 
 export default PDFService;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="PDFService.html">PDFService</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Mar 29 2021 20:38:45 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

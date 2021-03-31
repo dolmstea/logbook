@@ -2,6 +2,7 @@
 //TODO: Put the whole dataset in the application state/redux store.
 //TODO: Could add more Collapses to the LogList.
 //FIXME: When you edit a log and delete the comment, then click update, the comment is still there. I suspect the router is just going back without reloading the page. Updating the case title works though.
+//FIXME: Probably shouldn't save dates as timestamps since this might get screwed up with timezones.
 
 import React from 'react';
 import firebase from 'firebase/app';
@@ -27,9 +28,18 @@ import {
     Button,
     ButtonGroup,
     withWidth,
+    Dialog,
+    DialogTitle,
+    DialogContentText,
+    DialogContent,
+    DialogActions,
+    Grid,
+    CircularProgress,
 } from '@material-ui/core';
 
 import { AccountCircle, Add } from '@material-ui/icons';
+
+import { DatePicker } from '@material-ui/pickers';
 
 import { createMuiTheme, ThemeProvider, styled } from '@material-ui/core/styles';
 
@@ -44,7 +54,7 @@ import NewUser from './views/NewUser.js';
 import PassReset from './views/PassReset.js';
 import Profile from './views/Profile.js';
 import EditProfile from './views/EditProfile.js';
-import Loading from './views/Loading.js';
+import Loading from './components/Loading.js';
 import Report from './views/Report.js';
 import PDFService from './services/PDFService.js';
 //import JSPDFService from './services/JSPDFService.js';
@@ -80,6 +90,10 @@ class App extends React.Component {
             menuAnchor: null,
             newItemMenuAnchor: null,
             isLoading: true,
+            createPDFDialogOpen: false,
+            genPDFDialogStartDate: new Date(),
+            genPDFDialogEndDate: new Date(),
+            pdfLoading: false,
         };
 
         this.signOut = this.signOut.bind(this);
@@ -88,21 +102,8 @@ class App extends React.Component {
         this.closeMenu = this.closeMenu.bind(this);
         this.openNewItemMenu = this.openNewItemMenu.bind(this);
         this.closeNewItemMenu = this.closeNewItemMenu.bind(this);
-
-        this.stagingArea = React.createRef();
-
-        /*
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                this.props.logIn(user.uid);
-            } else {
-                this.props.logOut();
-            }
-            this.setState({
-                isLoading: false,
-            });
-        });
-        */
+        this.handleGenPDFDialogStartDateChange = this.handleGenPDFDialogStartDateChange.bind(this);
+        this.handleGenPDFDialogEndDateChange = this.handleGenPDFDialogEndDateChange.bind(this);
     }
 
     signOut() {
@@ -138,6 +139,18 @@ class App extends React.Component {
         });
     }
 
+    handleGenPDFDialogStartDateChange(date) {
+        this.setState({
+            genPDFDialogStartDate: date,
+        });
+    }
+
+    handleGenPDFDialogEndDateChange(date) {
+        this.setState({
+            genPDFDialogEndDate: date,
+        });
+    }
+
     componentDidMount() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
@@ -152,7 +165,6 @@ class App extends React.Component {
     }
 
     render() {
-        //console.log(this.props.uid ? 'Logged in.' : 'Logged out.');
         return (
             <ThemeProvider theme={theme}>
                 <Router>
@@ -206,10 +218,10 @@ class App extends React.Component {
                                                     keepMounted
                                                     open={Boolean(this.state.newItemMenuAnchor)}
                                                     onClose={this.closeNewItemMenu}
-                                                    anchorOrigin={{
+                                                    /*anchorOrigin={{
                                                         vertical: 'bottom',
                                                         horizontal: 'right',
-                                                    }}
+                                                    }}*/
                                                     transformOrigin={{
                                                         vertical: 'top',
                                                         horizontal: 'right',
@@ -239,10 +251,10 @@ class App extends React.Component {
                                                     keepMounted
                                                     open={Boolean(this.state.menuAnchor)}
                                                     onClose={this.closeMenu}
-                                                    anchorOrigin={{
+                                                    /*anchorOrigin={{
                                                         vertical: 'bottom',
                                                         horizontal: 'right',
-                                                    }}
+                                                    }}*/
                                                     transformOrigin={{
                                                         vertical: 'top',
                                                         horizontal: 'right',
@@ -254,13 +266,111 @@ class App extends React.Component {
 
                                                     <MenuItem
                                                         onClick={() => {
-                                                            const svc = new PDFService(this.props.uid);
-                                                            svc.genPDF();
+                                                            this.setState({
+                                                                createPDFDialogOpen: true,
+                                                            });
+
                                                             this.closeMenu();
                                                         }}
                                                     >
                                                         Generate PDF Report
                                                     </MenuItem>
+
+                                                    <Dialog
+                                                        open={this.state.createPDFDialogOpen}
+                                                        onClose={this.handlePDFDialogClose}
+                                                    >
+                                                        <DialogTitle>Generate PDF Report</DialogTitle>
+                                                        {this.state.pdfLoading ? (
+                                                            <DialogContent>
+                                                                <Box mb={4} display='flex' justifyContent='center'>
+                                                                    <CircularProgress />
+                                                                </Box>
+                                                            </DialogContent>
+                                                        ) : (
+                                                            <React.Fragment>
+                                                                <DialogContent>
+                                                                    <DialogContentText>
+                                                                        Generate a PDF report of cases in this logbook
+                                                                        for submission to the competency committee.
+                                                                        Enter the date range (inclusive) to print, or
+                                                                        select "Print All".
+                                                                    </DialogContentText>
+                                                                    <Grid container justify='space-evenly'>
+                                                                        <DatePicker
+                                                                            label='Start Date'
+                                                                            inputVariant='outlined'
+                                                                            format='MMMM do, y'
+                                                                            value={this.state.genPDFDialogStartDate}
+                                                                            onChange={
+                                                                                this.handleGenPDFDialogStartDateChange
+                                                                            }
+                                                                        />
+                                                                        <DatePicker
+                                                                            label='End Date'
+                                                                            inputVariant='outlined'
+                                                                            format='MMMM do, y'
+                                                                            value={this.state.genPDFDialogEndDate}
+                                                                            onChange={
+                                                                                this.handleGenPDFDialogEndDateChange
+                                                                            }
+                                                                        />
+                                                                    </Grid>
+                                                                </DialogContent>
+                                                                <DialogActions>
+                                                                    <Button
+                                                                        onClick={() => {
+                                                                            const svc = new PDFService(this.props.uid);
+                                                                            this.setState({
+                                                                                pdfLoading: true,
+                                                                            });
+                                                                            svc.genPDF().then(() => {
+                                                                                this.setState({
+                                                                                    createPDFDialogOpen: false,
+                                                                                    pdfLoading: false,
+                                                                                    genPDFDialogStartDate: new Date(),
+                                                                                    genPDFDialogEndDate: new Date(),
+                                                                                });
+                                                                            });
+                                                                        }}
+                                                                    >
+                                                                        Print All
+                                                                    </Button>
+                                                                    <Button
+                                                                        onClick={() => {
+                                                                            const svc = new PDFService(
+                                                                                this.props.uid,
+                                                                                this.state.genPDFDialogStartDate,
+                                                                                this.state.genPDFDialogEndDate
+                                                                            );
+                                                                            this.setState({ pdfLoading: true });
+                                                                            svc.genPDF().then(() => {
+                                                                                this.setState({
+                                                                                    createPDFDialogOpen: false,
+                                                                                    pdfLoading: false,
+                                                                                    genPDFDialogStartDate: new Date(),
+                                                                                    genPDFDialogEndDate: new Date(),
+                                                                                });
+                                                                            });
+                                                                        }}
+                                                                    >
+                                                                        Print
+                                                                    </Button>
+                                                                    <Button
+                                                                        onClick={() => {
+                                                                            this.setState({
+                                                                                createPDFDialogOpen: false,
+                                                                                genPDFDialogStartDate: new Date(),
+                                                                                genPDFDialogEndDate: new Date(),
+                                                                            });
+                                                                        }}
+                                                                    >
+                                                                        Cancel
+                                                                    </Button>
+                                                                </DialogActions>
+                                                            </React.Fragment>
+                                                        )}
+                                                    </Dialog>
 
                                                     {/*
                                                     <MenuItem
@@ -308,69 +418,69 @@ class App extends React.Component {
                             {this.state.isLoading ? (
                                 <Loading />
                             ) : (
-                                    <Switch>
-                                        <Route path='/loading'>
-                                            {' '}
-                                            {/* This is just for testing. */}
-                                            <Loading />
+                                <Switch>
+                                    <Route path='/loading'>
+                                        {' '}
+                                        {/* This is just for testing. */}
+                                        <Loading />
+                                    </Route>
+                                    <Route path='/addUser'>
+                                        <NewUser />
+                                    </Route>
+                                    <Route path='/resetPass'>
+                                        <PassReset />
+                                    </Route>
+                                    {this.props.uid && (
+                                        <Route path='/list'>
+                                            <LogList />
                                         </Route>
-                                        <Route path='/addUser'>
-                                            <NewUser />
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/procList'>
+                                            <ProcedureList />
                                         </Route>
-                                        <Route path='/resetPass'>
-                                            <PassReset />
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/newCase'>
+                                            <NewEntry />
                                         </Route>
-                                        {this.props.uid && (
-                                            <Route path='/list'>
-                                                <LogList />
-                                            </Route>
-                                        )}
-                                        {this.props.uid && (
-                                            <Route path='/procList'>
-                                                <ProcedureList />
-                                            </Route>
-                                        )}
-                                        {this.props.uid && (
-                                            <Route path='/newCase'>
-                                                <NewEntry />
-                                            </Route>
-                                        )}
-                                        {this.props.uid && (
-                                            <Route path='/newProc'>
-                                                <NewProcedure />
-                                            </Route>
-                                        )}
-                                        {this.props.uid && (
-                                            <Route path='/edit'>
-                                                <EditEntry />
-                                            </Route>
-                                        )}
-                                        {this.props.uid && (
-                                            <Route path='/editProc'>
-                                                <EditProcedure />
-                                            </Route>
-                                        )}
-                                        {this.props.uid && (
-                                            <Route path='/profile'>
-                                                <Profile />
-                                            </Route>
-                                        )}
-                                        {this.props.uid && (
-                                            <Route path='/editProfile'>
-                                                <EditProfile />
-                                            </Route>
-                                        )}
-                                        {this.props.uid && (
-                                            <Route path='/report'>
-                                                <Report />
-                                            </Route>
-                                        )}
-                                        <Route path='/'>{this.props.uid ? <Redirect to='/list' /> : <Auth />}</Route>
-                                    </Switch>
-                                )}
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/newProc'>
+                                            <NewProcedure />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/edit'>
+                                            <EditEntry />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/editProc'>
+                                            <EditProcedure />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/profile'>
+                                            <Profile />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/editProfile'>
+                                            <EditProfile />
+                                        </Route>
+                                    )}
+                                    {this.props.uid && (
+                                        <Route path='/report'>
+                                            <Report />
+                                        </Route>
+                                    )}
+                                    <Route path='/'>{this.props.uid ? <Redirect to='/list' /> : <Auth />}</Route>
+                                </Switch>
+                            )}
                             <Box mt={4}>
                                 <Typography variant='body2' align='center'>
-                                    &copy; 2021 David Olmstead
+                                    &copy; 2021 David Olmstead &middot; Built {new Date().toDateString()}
                                 </Typography>
                             </Box>
                         </Route>

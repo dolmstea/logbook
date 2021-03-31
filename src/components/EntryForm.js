@@ -12,6 +12,8 @@ import {
     Grid,
 } from '@material-ui/core';
 
+import { DatePicker } from '@material-ui/pickers';
+
 import { Autocomplete } from '@material-ui/lab';
 
 const locations = ['VGH', 'SPH', 'RCH', 'BCWH/BCCH', 'LGH', 'Victoria'];
@@ -36,43 +38,19 @@ const procedures = ['IV', 'Intubation', 'LMA', 'Spinal', 'Epidural', 'Art Line',
 const epas = ['A1', 'B2'];
 
 class EntryForm extends React.Component {
-    /*
-    constructor(props) {
-        super(props);
-    }
-
-    handleChange(event) {
-        const target = event.target;
-        const name = target.name;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-
-        this.setState({
-            [name]: value,
-        });
-    }
-
-    handleChangeAC(key, value) {
-        this.setState({
-            [key]: value,
-        });
-    }
-    */
-
     render() {
         return (
             <React.Fragment>
-                <Box mt={8}>
+                <Box mt={8} mb={2}>
                     <Typography variant='h4'>{this.props.title}</Typography>
                 </Box>
-                <TextField
-                    variant='outlined'
-                    type='date'
-                    name='date'
-                    margin='normal'
+                <DatePicker
+                    inputVariant='outlined'
                     fullWidth
+                    label='Date'
+                    format='y-MM-dd'
                     value={this.props.data.date}
-                    onChange={this.props.handleChange}
-                />
+                    onChange={this.props.handleDateChange} />
                 <Autocomplete
                     name='location'
                     freeSolo
@@ -172,7 +150,7 @@ class EntryForm extends React.Component {
                     freeSolo
                     multiple
                     options={epas}
-                    value={this.props.data.epas}
+                    value={this.props.data.epas.length === 1 && this.props.data.epas[0] === '' ? '' : this.props.data.epas}
                     onChange={(event, value, reason) => this.props.handleChangeAC('epas', value)}
                     renderInput={(params) => (
                         <TextField {...params} margin='normal' variant='outlined' label='EPA-Specific' />
@@ -206,55 +184,6 @@ class EntryForm extends React.Component {
                     fullWidth
                     multiline
                 />
-                {/*
-                <Box display='flex' justifyContent='center' pt={2}>
-                    <Box mx={1}>
-                        <Button
-                            variant='outlined'
-                            onClick={() => {
-                                this.props.handleSubmit(this.state);
-                                this.props.history.push('/list');
-                            }}
-                        >
-                            Save
-                        </Button>
-                    </Box>
-                    <Box mx={1}>
-                        <Button
-                            variant='outlined'
-                            onClick={() => {
-                                this.props.handleSubmit(this.state);
-                                this.setState({
-                                    date: '',
-                                    location: '',
-                                    age: '',
-                                    asa: '',
-                                    e: false,
-                                    service: '',
-                                    type: [],
-                                    procedures: [],
-                                    epas: [],
-                                    case: '',
-                                    staff: '',
-                                    comments: '',
-                                });
-                            }}
-                        >
-                            Save &amp; New
-                        </Button>
-                    </Box>
-                    <Box mx={1}>
-                        <Button
-                            variant='outlined'
-                            onClick={() => {
-                                this.props.history.push('/list');
-                            }}
-                        >
-                            Cancel
-                        </Button>
-                    </Box>
-                </Box>
-                        */}
             </React.Fragment>
         );
     }

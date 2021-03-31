@@ -36,7 +36,9 @@ import { styled } from '@material-ui/core/styles';
 
 import { withRouter } from 'react-router';
 
-import Loading from './Loading.js';
+//import { format } from 'date-fns';
+
+import Loading from '../components/Loading.js';
 
 //TODO: Sort by date added.
 //FIXME: If you delete all the entries for a given date, the date header still stays on the screen.
@@ -59,6 +61,7 @@ class LogList extends React.Component {
             armed: [],
             isLoading: true,
             isEmpty: false,
+            progress: null,
         };
 
         this.toggleCollapse = this.toggleCollapse.bind(this);
@@ -77,15 +80,24 @@ class LogList extends React.Component {
             .then((qs) => {
                 var logs = {};
 
+                var totalItems = qs.size;
+                var thisItem = 1;
+
                 qs.forEach((doc) => {
                     const data = doc.data();
                     data.id = doc.id;
                     data.collapsed = false;
+                    
                     if (data.date in logs) {
                         logs[data.date].push(data);
                     } else {
                         logs[data.date] = [data];
                     }
+
+                    this.setState({
+                        progress: (thisItem/totalItems)*100
+                    });
+                    thisItem++;
                 });
 
                 this.setState({
@@ -170,7 +182,7 @@ class LogList extends React.Component {
         dates.reverse();
 
         if (this.state.isLoading) {
-            return <Loading />;
+            return <Loading progress={this.state.progress} />;
         } else {
             return (
                 <Container maxWidth='md'>
